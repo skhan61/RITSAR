@@ -5,6 +5,8 @@ from numpy.linalg import norm
 import matplotlib.pylab as plt
 from scipy.stats import linregress
 from matplotlib import cm
+import logging
+
 from . import signal as sig
 from . import phsTools
 from scipy.interpolate import interp1d
@@ -42,7 +44,7 @@ def phs_inscribe(img):
             cv2.imshow('win', img_out)
         
     #Create inscribe function
-    print('\
+    logging.getLogger(__name__).debug('\
 Click and drag from top-left to bottom-right\n\
 to inscribe phase history \n\n\
 Right-click to reset image\n\
@@ -151,7 +153,7 @@ def polar_format(phs, platform, img_plane, taylor = 20):
     imag_rad_interp = np.zeros([npulses,nu])
     ky_new = np.zeros([npulses,nu])
     for i in range(npulses):
-        print('range interpolating for pulse %i'%(i+1))
+        logging.getLogger(__name__).debug('range interpolating for pulse %i'%(i+1))
         real_rad_interp[i,:] = np.interp(k_ui, ku[i,:], 
             phs.real[i,:]*win1, left = 0, right = 0)
         imag_rad_interp[i,:] = np.interp(k_ui, ku[i,:], 
@@ -164,14 +166,14 @@ def polar_format(phs, platform, img_plane, taylor = 20):
     isSort = (ky_new[npulses//2, nu//2] < ky_new[npulses//2+1, nu//2])
     if isSort:
         for i in range(nu):
-            print('cross-range interpolating for sample %i'%(i+1))
+            logging.getLogger(__name__).debug('cross-range interpolating for sample %i'%(i+1))
             real_polar[:,i] = np.interp(k_vi, ky_new[:,i], 
                 real_rad_interp[:,i]*win2, left = 0, right = 0)
             imag_polar[:,i] = np.interp(k_vi, ky_new[:,i], 
                 imag_rad_interp[:,i]*win2, left = 0, right = 0)
     else:
         for i in range(nu):
-            print('cross-range interpolating for sample %i'%(i+1))
+            logging.getLogger(__name__).debug('cross-range interpolating for sample %i'%(i+1))
             real_polar[:,i] = np.interp(k_vi, ky_new[::-1,i], 
                 real_rad_interp[::-1,i]*win2, left = 0, right = 0)
             imag_polar[:,i] = np.interp(k_vi, ky_new[::-1,i], 
@@ -319,7 +321,7 @@ def backprojection(phs, platform, img_plane, taylor = 20, upsample = 6, prnt = T
     img = np.zeros(nu*nv)+0j
     for i in range(npulses):
         if prnt:
-            print("Calculating backprojection for pulse %i" %i)
+            logging.getLogger(__name__).debug("Calculating backprojection for pulse %i" %i)
         r0 = np.array([pos[i]]).T
         dr_i = norm(r0)-norm(r-r0, axis = 0)
     
@@ -613,7 +615,7 @@ def FFBP(phs, platform, img_plane, N=3, derate = 1.05, taylor = 20, n = 32, beta
     #Begin factorization
     for i in range(N):
         if prnt:
-            print('processing recursion level %i of %i'%((i+1),N))
+            logging.getLogger(__name__).debug('processing recursion level %i of %i'%((i+1),N))
         
         #create temporary child containers
         phsDS_list_tmp      = []
@@ -651,7 +653,7 @@ def FFBP(phs, platform, img_plane, N=3, derate = 1.05, taylor = 20, n = 32, beta
             for k in range(2):
                 for l in range(2):
                     if prnt:
-                        print('digitally spotlighting sub-image %i of %i'
+                        logging.getLogger(__name__).debug('digitally spotlighting sub-image %i of %i'
                             %(image_number, n_img*4))
                     
                     #update img_plane['u','v']
@@ -703,7 +705,7 @@ def FFBP(phs, platform, img_plane, N=3, derate = 1.05, taylor = 20, n = 32, beta
     #Break image into sub images (get sub_image indices)
     img_FFBP = np.zeros([v.size, u.size])+0j
     for image_number in range(n_img):
-        print('creating sub-image %i of %i'%((image_number+1), n_img))
+        logging.getLogger(__name__).debug('creating sub-image %i of %i'%((image_number+1), n_img))
         i,j = img_planeDS_list[image_number]['index']
     
         #update img_plane['u','v']
@@ -763,7 +765,7 @@ def FFBPmp(phs, platform, img_plane, N=3, derate = 1.05, taylor = 20, n = 32, be
     pos_array = np.arange(len(pos[0,]))
     pos_array = np.reshape(pos_array, full_size)[::-1]
     
-    print('creating 4 sub images and assigning them to 4 processes')
+    logging.getLogger(__name__).debug('creating 4 sub images and assigning them to 4 processes')
     #Break image into sub images (get sub_image indices)
     img_FFBP = np.zeros(full_size)+0j
     for k in range(2):
@@ -820,11 +822,11 @@ def FFBPmp(phs, platform, img_plane, N=3, derate = 1.05, taylor = 20, n = 32, be
     sub_size = np.array(full_size/2, dtype = int)
     img_FFBP = np.zeros(full_size)
     
-    print('proessing 4 sub images, please wait...')
+    logging.getLogger(__name__).debug('proessing 4 sub images, please wait...')
     #Break image into sub images (get sub_image indices)
     img_FFBP = np.zeros([v.size, u.size])+0j
     for image_number in range(n_img):
-        print('creating sub-image %i of %i'%((image_number+1), n_img))
+        logging.getLogger(__name__).debug('creating sub-image %i of %i'%((image_number+1), n_img))
         i,j = img_planeDS_list[image_number]['index']
     
         #update img_plane['u','v']
@@ -1021,7 +1023,7 @@ def autoFocus(img, win = 'auto', win_params = [100,0.5]):
     plt.tight_layout()
     
 
-    print('number of iterations: %i'%(iii+1))
+    logging.getLogger(__name__).debug('number of iterations: %i'%(iii+1))
                      
     return(img_af, af_ph)
     
@@ -1145,7 +1147,7 @@ def autoFocus2(img, win = 'auto', win_params = [100,0.5]):
     plt.tight_layout()
     
 
-    print('number of iterations: %i'%(iii+1))
+    logging.getLogger(__name__).debug('number of iterations: %i'%(iii+1))
                      
     return(img_af, af_ph)
     
