@@ -66,17 +66,17 @@ def AFRL(directory, pol, start_az, n_az=3):
         B_IF        = data['freq'].max()-data['freq'].min()
         delta_r     = c/(2*B_IF)
         delta_t     = 1.0/B_IF
-        t           = np.linspace(-nsamples/2, nsamples/2, nsamples)*delta_t
+        t           = np.linspace(-nsamples//2, nsamples//2, nsamples)*delta_t
         
         chirprate, f_0, r, p, s\
                     = linregress(t, freq)
                     
         #Vector to scene center at synthetic aperture center
         if np.mod(npulses,2)>0:
-            R_c = pos[npulses/2]
+            R_c = pos[npulses//2]
         else:
             R_c = np.mean(
-                    pos[npulses/2-1:npulses/2+1],
+                    pos[npulses//2-1:npulses//2+1],
                     axis = 0)
         
         #Save values to dictionary for export
@@ -105,10 +105,10 @@ def AFRL(directory, pol, start_az, n_az=3):
         pos = np.vstack((pos, platform[i]['pos']))
                        
     if np.mod(npulses,2)>0:
-        R_c = pos[npulses/2]
+        R_c = pos[npulses//2]
     else:
         R_c = np.mean(
-                pos[npulses/2-1:npulses/2+1],
+                pos[npulses//2-1:npulses//2+1],
                 axis = 0)
                        
     #Replace Dictionary values
@@ -121,7 +121,7 @@ def AFRL(directory, pol, start_az, n_az=3):
     L = norm(pos[-1]-pos[0])
 
     #Add k_y
-    platform['k_y'] = np.linspace(-npulses/2,npulses/2,npulses)*2*pi/L
+    platform['k_y'] = np.linspace(-npulses//2,npulses//2,npulses)*2*pi/L
     
     return(phs, platform)
     
@@ -245,7 +245,7 @@ def Sandia(directory):
     pos     = record[6]['rpoint']
     n_hat   = record[3]['fpn']
     delta_t = record[4]['fs']
-    t       = np.linspace(-nsamples/2, nsamples/2, nsamples)*1.0/delta_t
+    t       = np.linspace(-nsamples//2, nsamples//2, nsamples)*1.0/delta_t
     chirprate = record[4]['fdot']*1.0/(2*pi)
     f_0     = record[4]['f0']*1.0/(2*pi) + chirprate*nsamples/(2*delta_t)
     B_IF    = (t.max()-t.min())*chirprate
@@ -255,10 +255,10 @@ def Sandia(directory):
     k_r = 2*omega/c
     
     if np.mod(npulses,2)>0:
-        R_c = pos[npulses/2]
+        R_c = pos[npulses//2]
     else:
         R_c = np.mean(
-                pos[npulses/2-1:npulses/2+1],
+                pos[npulses//2-1:npulses//2+1],
                 axis = 0)
     
     platform = \
@@ -343,7 +343,7 @@ def DIRSIG(directory):
     npulses     = int(phs.shape[0])
     vp          = float(get(root, 'speed'))
     delta_t     = float(get(root, 'delta'))
-    t           = np.linspace(-nsamples/2, nsamples/2, nsamples)*delta_t
+    t           = np.linspace(-nsamples//2, nsamples//2, nsamples)*delta_t
     prf         = float(get(root, 'clockrate'))
     chirprate   = float(get(root, 'chirprate'))/pi
     T_p         = float(get(root, 'pulseduration'))
@@ -364,14 +364,14 @@ def DIRSIG(directory):
     z = np.array([np.interp(ti, t_dirs, pos_dirs[:,2])]).T
     pos = np.hstack((x,y,z))
     L = norm(pos[-1]-pos[0])
-    k_y = np.linspace(-npulses/2,npulses/2,npulses)*2*pi/L
+    k_y = np.linspace(-npulses//2,npulses//2,npulses)*2*pi/L
     
     #Vector to scene center at synthetic aperture center
     if np.mod(npulses,2)>0:
-        R_c = pos[npulses/2]
+        R_c = pos[npulses//2]
     else:
         R_c = np.mean(
-                pos[npulses/2-1:npulses/2+1],
+                pos[npulses//2-1:npulses//2+1],
                 axis = 0)
                 
     #Derived Parameters

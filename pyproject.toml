@@ -1,0 +1,26 @@
+# Added in the python3-compatibility fork. Upstream ships setup.py using
+# `distutils`, which was REMOVED from the standard library in Python 3.12, so
+# upstream cannot be pip-installed on a current interpreter at all.
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ritsar"
+version = "0.1.1"
+description = "Synthetic Aperture Radar (SAR) image processing toolbox for Python"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [{ name = "Douglas Macdonald" }]
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+]
+
+[project.urls]
+Upstream = "https://github.com/dm6718/RITSAR"
+
+[tool.setuptools.packages.find]
+include = ["ritsar*"]

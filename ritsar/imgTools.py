@@ -161,7 +161,7 @@ def polar_format(phs, platform, img_plane, taylor = 20):
     #Interpolate in along track direction to obtain polar formatted data
     real_polar = np.zeros([nv,nu])
     imag_polar = np.zeros([nv,nu])
-    isSort = (ky_new[npulses/2, nu/2] < ky_new[npulses/2+1, nu/2])
+    isSort = (ky_new[npulses//2, nu//2] < ky_new[npulses//2+1, nu//2])
     if isSort:
         for i in range(nu):
             print('cross-range interpolating for sample %i'%(i+1))
@@ -291,7 +291,7 @@ def backprojection(phs, platform, img_plane, taylor = 20, upsample = 6, prnt = T
     #Derive parameters
     nu = u.size
     nv = v.size
-    k_c = k_r[nsamples/2]
+    k_c = k_r[nsamples//2]
     
     #Create window
     win_x = sig.taylor(nsamples,taylor)
@@ -329,7 +329,7 @@ def backprojection(phs, platform, img_plane, taylor = 20, upsample = 6, prnt = T
         Q_hat = Q_real+1j*Q_imag        
         img += Q_hat*np.exp(-1j*k_c*dr_i)
     
-    r0 = np.array([pos[npulses/2]]).T
+    r0 = np.array([pos[npulses//2]]).T
     dr_i = norm(r0)-norm(r-r0, axis = 0)
     img = img*np.exp(1j*k_c*dr_i)   
     img = np.reshape(img, [nv, nu])[::-1,:]
@@ -394,8 +394,8 @@ def DSBP(phs, platform, img_plane, center=None, size=None, derate = 1.05, taylor
     #update platform
     platformDS['nsamples'] = freq.size
     platformDS['freq']     = freq
-    deltaF = freq[freq.size/2]-freq[freq.size/2-1] #Assume sample spacing can be determined by difference between last two values (first two are distorted by decimation filter)
-    freq   = freq[freq.size/2]+np.arange(-freq.size/2,freq.size/2)*deltaF
+    deltaF = freq[freq.size//2]-freq[freq.size//2-1] #Assume sample spacing can be determined by difference between last two values (first two are distorted by decimation filter)
+    freq   = freq[freq.size//2]+np.arange(-freq.size//2,freq.size//2)*deltaF
     platformDS['k_r'] = 4*pi*freq/c
 
     #interpolate phs and pos using uniform azimuth spacing
@@ -521,8 +521,8 @@ def DS(phs, platform, img_plane, center=None, size=None, derate = 1.05, taylor =
     #update platform
     platformDS['nsamples'] = freq.size
     platformDS['freq']     = freq
-    deltaF = freq[freq.size/2]-freq[freq.size/2-1] #Assume sample spacing can be determined by difference between last two values (first two are distorted by decimation filter)
-    freq   = freq[freq.size/2]+np.arange(-freq.size/2,freq.size/2)*deltaF
+    deltaF = freq[freq.size//2]-freq[freq.size//2-1] #Assume sample spacing can be determined by difference between last two values (first two are distorted by decimation filter)
+    freq   = freq[freq.size//2]+np.arange(-freq.size//2,freq.size//2)*deltaF
     platformDS['k_r'] = 4*pi*freq/c
 
     #interpolate phs and pos using uniform azimuth spacing
@@ -872,8 +872,8 @@ def img_plane_dict(platform, res_factor=1.0, n_hat = np.array([0,0,1]), aspect =
     dv = aspect*du
     
     #Define range and cross-range locations
-    u = np.arange(-nu/2, nu/2)*du
-    v = np.arange(-nv/2, nv/2)*dv
+    u = np.arange(-nu//2, nu//2)*du
+    v = np.arange(-nv//2, nv//2)*dv
     
     #Derive image plane spatial frequencies
     k_u = 2*pi*np.linspace(-1.0/(2*du), 1.0/(2*du), nu)
@@ -949,18 +949,18 @@ def autoFocus(img, win = 'auto', win_params = [100,0.5]):
         #Circularly shift image so max values line up   
         f = np.zeros(img.shape)+0j
         for i in range(nsamples):
-            f[:,i] = np.roll(img_af[:,i], npulses/2-index[i])
+            f[:,i] = np.roll(img_af[:,i], npulses//2-index[i])
         
         if win == 'auto':
             #Compute window width    
             s = np.sum(f*np.conj(f), axis = -1)
             s = 10*np.log10(s/s.max())
             width = np.sum(s>-30)
-            window = np.arange(npulses/2-width/2,npulses/2+width/2)
+            window = np.arange(npulses//2-width//2,npulses//2+width//2)
         else:
             #Compute window width using win_params if win not set to 'auto'    
             width = int(win_params[0]*win_params[1]**iii)
-            window = np.arange(npulses/2-width/2,npulses/2+width/2)
+            window = np.arange(npulses//2-width//2,npulses//2+width//2)
             if width<5:
                 break
         
@@ -1065,7 +1065,7 @@ def autoFocus2(img, win = 'auto', win_params = [100,0.5]):
         #Circularly shift image so max values line up   
         f = np.zeros(img.shape)+0j
         for i in range(nsamples):
-            f[:,i] = np.roll(img_af[:,i], npulses/2-index[i])
+            f[:,i] = np.roll(img_af[:,i], npulses//2-index[i])
         
         if win == 'auto':
             #Compute window width    
@@ -1076,15 +1076,15 @@ def autoFocus2(img, win = 'auto', win_params = [100,0.5]):
             if iii == 0:
                 width = npulses
             elif iii == 1:
-                width = npulses/2
+                width = npulses//2
             #For all other iterations, use twice the 30 dB threshold
             else:
                 width = np.sum(s>-30)
-            window = np.arange(npulses/2-width/2,npulses/2+width/2)
+            window = np.arange(npulses//2-width//2,npulses//2+width//2)
         else:
             #Compute window width using win_params if win not set to 'auto'    
             width = int(win_params[0]*win_params[1]**iii)
-            window = np.arange(npulses/2-width/2,npulses/2+width/2)
+            window = np.arange(npulses//2-width//2,npulses//2+width//2)
             if width<5:
                 break
         

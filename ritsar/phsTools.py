@@ -62,7 +62,7 @@ def RVP_correct(phs, platform):
     dr      =   platform['delta_r']
     
     #Calculate frequency sample locations w.r.t. demodulated fast time
-    f_t = np.linspace(-nsamples/2, nsamples/2, nsamples)*\
+    f_t = np.linspace(-nsamples//2, nsamples//2, nsamples)*\
             2*gamma/c*dr
     
     #Calculate correction factor
