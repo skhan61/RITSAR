@@ -317,7 +317,7 @@ def DIRSIG(directory):
         pos_dirs.append(float(children[0].text))
         pos_dirs.append(float(children[1].text))
         pos_dirs.append(float(children[2].text))
-    pos_dirs = np.asarray(pos_dirs).reshape([len(pos_dirs)/3,3])
+    pos_dirs = np.asarray(pos_dirs).reshape([len(pos_dirs)//3,3])
     
     t_dirs=[]
     for children in root.iter('datetime'):

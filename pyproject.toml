@@ -19,6 +19,12 @@ dependencies = [
     "matplotlib",
 ]
 
+[project.optional-dependencies]
+# The DIRSIG reader alone needs this, and upstream never declared it, so
+# `phsRead.DIRSIG` raised ModuleNotFoundError on a clean install.
+dirsig = ["spectral"]
+test = ["pytest", "spectral"]
+
 [project.urls]
 Upstream = "https://github.com/dm6718/RITSAR"
 
