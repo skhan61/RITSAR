@@ -170,7 +170,7 @@ def decimate(x, q, n=None, axis=-1, beta = None, cutoff = 'nyq'):
     if beta == None:
         beta = 1.*n/8
     
-    padlen = n/2
+    padlen = n//2
     
     if cutoff == 'nyq':
         eps = np.finfo(float).eps
@@ -184,4 +184,4 @@ def decimate(x, q, n=None, axis=-1, beta = None, cutoff = 'nyq'):
     
     sl = [slice(None)] * y.ndim
     sl[axis] = slice(None, None, q)
-    return y[sl]
+    return y[tuple(sl)]
