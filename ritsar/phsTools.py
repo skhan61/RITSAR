@@ -17,7 +17,7 @@ def simulate_phs(platform, points = [[0,0,0]], amplitudes = [1]):
 ##############################################################################
     
     #Retrieve relevent parameters
-    c       =   3.0e8
+    c       =   299792458.0
     gamma   =   platform['chirprate']
     f_0     =   platform['f_0']
     t       =   platform['t']
@@ -57,7 +57,7 @@ def RVP_correct(phs, platform):
 ##############################################################################
   
     #Retrieve relevent parameters
-    c       =   3.0e8
+    c       =   299792458.0
     gamma   =   platform['chirprate']
     nsamples=   platform['nsamples']
     npulses =   platform['npulses']
@@ -89,7 +89,7 @@ def phs_to_const_ref(phs, platform, upchirp = 1):
 ##############################################################################
 
     #Retrieve relevent parameters
-    c       =   3.0e8
+    c       =   299792458.0
     f0      =   platform['f_0']
     gamma   =   platform['chirprate']
     pos     =   platform['pos']
